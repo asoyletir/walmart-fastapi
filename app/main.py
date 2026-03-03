@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.walmart.client import walmart_request
 from fastapi import HTTPException
+from app.walmart.auth import get_token
 
 app = FastAPI(title="Walmart Integration API")
 
