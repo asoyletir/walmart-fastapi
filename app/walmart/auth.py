@@ -2,7 +2,7 @@ import os
 import httpx
 import base64
 
-WALMART_TOKEN_URL = "https://sandbox.walmartapis.com"
+WALMART_TOKEN_URL = "https://sandbox.walmartapis.com/v3/token"
 
 async def get_token():
     client_id = os.getenv("WALMART_CLIENT_ID")
