@@ -1,5 +1,6 @@
 import os
 import httpx
+import base64
 
 TOKEN_URLS = {
     "prod": "https://marketplace.walmartapis.com/v3/token",
@@ -17,20 +18,23 @@ async def get_token():
     if not client_id or not client_secret:
         raise RuntimeError("Missing WALMART_CLIENT_ID or WALMART_CLIENT_SECRET")
 
+    # Basic Auth header manuel oluşturuyoruz
+    credentials = f"{client_id}:{client_secret}"
+    encoded_credentials = base64.b64encode(credentials.encode()).decode()
+
     headers = {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Authorization": f"Basic {encoded_credentials}",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json",
     }
 
-    data = {
-        "grant_type": "client_credentials"
-    }
+    data = "grant_type=client_credentials"
 
     async with httpx.AsyncClient(timeout=30) as client:
         response = await client.post(
             token_url,
             headers=headers,
-            data=data,
-            auth=(client_id, client_secret)
+            content=data,
         )
 
     response.raise_for_status()
