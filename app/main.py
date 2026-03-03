@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.walmart.auth import get_token
 
 app = FastAPI(title="Walmart Integration API")
 
@@ -10,3 +11,7 @@ def health():
 def get_item(sku: str):
     # Şimdilik dummy. Sonraki adımda Walmart API çağrısı gelecek.
     return {"sku": sku, "source": "dummy"}
+
+@app.get("/token")
+async def token():
+    return await get_token()
