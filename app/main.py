@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.walmart.client import walmart_request
+from fastapi import HTTPException
 
 app = FastAPI(title="Walmart Integration API")
 
@@ -16,3 +17,10 @@ async def wm_ping():
 @app.get("/wm/item/{sku}")
 async def wm_item(sku: str):
     return await walmart_request("GET", f"/v3/ca/items/{sku}")
+
+@app.get("/token")
+async def token():
+    try:
+        return await get_token()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
