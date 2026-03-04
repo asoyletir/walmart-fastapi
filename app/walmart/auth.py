@@ -2,7 +2,9 @@ import os
 import time
 import httpx
 
-WALMART_TOKEN_URL = "https://marketplace.walmartapis.com/v3/token"
+WALMART_TOKEN_URL = (os.getenv("WALMART_TOKEN_URL") or "").strip()
+if not WALMART_TOKEN_URL:
+    raise RuntimeError("Missing WALMART_TOKEN_URL (set it to https://sandbox.walmartapis.com/v3/token for sandbox)")
 
 _cached = {"token": None, "exp": 0.0}
 
@@ -16,11 +18,7 @@ async def get_token() -> dict:
     if not client_id or not client_secret:
         raise RuntimeError("Missing WALMART_CLIENT_ID or WALMART_CLIENT_SECRET")
 
-    headers = {
-        "accept": "application/json",
-        "content-type": "application/x-www-form-urlencoded",
-    }
-
+    headers = {"accept": "application/json", "content-type": "application/x-www-form-urlencoded"}
     data = {"grant_type": "client_credentials"}
 
     async with httpx.AsyncClient(timeout=30) as client:
